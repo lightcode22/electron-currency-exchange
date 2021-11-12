@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="default-src 'self' 'unsafe-inline' https://flagcdn.com; script-src 'self' 'unsafe-inline'; connect-src 'self' http://data.fixer.io http://country.io https://flagcdn.com"
+		/>
+		<meta
+			http-equiv="X-Content-Security-Policy"
+			content="default-src 'self'; script-src 'self'; connect-src 'self' http://data.fixer.io http://country.io"
+		/>
+		<link rel="stylesheet" href="style/styles.css" />
+		<title>Currency</title>
+	</head>
+	<body>
+		<search-select></search-select>
+
+		<exchange-rate
+			rate="1"
+			currency="USD"
+			fullName="United States Dollar"
+		></exchange-rate>
+
+		<convert-block currency="USD" rate="1"></convert-block>
+
+		<script src="./renderer.js"></script>
+		<script src="./components/display/ExchangeRate.js"></script>
+		<script src="./components/select/SearchSelect.js"></script>
+		<script src="./components/convert/ConvertBlock.js"></script>
+
+		<script>
+			const API_KEY = "59999a1c407616b150420caa9a3491d9";
+
+			let rate;
+
+			let rateComponent = document.querySelector("exchange-rate");
+
+			let searchComponent = document.querySelector("search-select");
+
+			let convertComponent = document.querySelector("convert-block");
+
+			async function queryCurrency(currency) {
+				rate = await fetch(
+					`http://data.fixer.io/api/latest?access_key=${API_KEY}&symbols=${currency}`
+				)
+					.then((res) => res.json())
+					.then((data) => data.rates[currency])
+					.catch((e) => console.log(e));
+
+				rateComponent.setAttribute("rate", rate);
+				rateComponent.setAttribute("currency", currency);
+				convertComponent.setAttribute("rate", rate);
+			}
+
+			queryCurrency("USD");
+
+			searchComponent.addEventListener("currencyChanged", (event) => {
+				queryCurrency(event.detail.currency);
+				rateComponent.setAttribute("fullName", event.detail.fullName);
+				convertComponent.setAttribute("currency", event.detail.currency);
+			});
+		</script>
+	</body>
+</html>

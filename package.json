@@ -2,17 +2,59 @@
 	"name": "component-based",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
-	"directories": {
-		"lib": "lib"
-	},
+	"main": "./build/index.js",
 	"scripts": {
-		"start": "electron ."
+		"start": "electron .",
+		"pack": "electron-builder --dir",
+		"dist": "electron-builder"
+	},
+	"build": {
+		"appId": "currencyrate",
+		"productName": "Currency rate",
+		"files": [
+			"./build/**/*"
+		],
+		"directories": {
+			"buildResources": "build",
+			"output": "dist"
+		},
+		"extends": null,
+		"extraMetadata": {
+			"main": "./build/index.js"
+		},
+		"mac": {
+			"category": "public.app-category.finance",
+			"target": [
+				"zip",
+				"dmg"
+			]
+		},
+		"win": {
+			"target": [
+				"nsis"
+			]
+		},
+		"linux": {
+			"target": [
+				"AppImage",
+				"tar.gz"
+			]
+		},
+		"dmg": {
+			"title": "Currency Rate"
+		},
+		"nsis": {
+			"oneClick": false,
+			"perMachine": false,
+			"allowToChangeInstallationDirectory": true,
+			"createDesktopShortcut": true
+		}
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
-		"electron": "^15.3.0"
+		"electron": "^15.3.0",
+		"electron-builder": "^22.13.1"
 	}
 }
